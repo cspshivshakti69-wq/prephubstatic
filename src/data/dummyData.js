@@ -123,5 +123,23 @@ export const videoResources = [
         subject: 'Chemistry',
         url: 'https://www.youtube.com/embed/lAPNQ4J8oXI',
         thumbnail: 'https://img.youtube.com/vi/lAPNQ4J8oXI/hqdefault.jpg'
+    },
+    {
+        id: 'un-2',
+        title: 'NEET NCERT 360 Biology',
+        platform: 'Unacademy',
+        exam: 'NEET',
+        subject: 'Biology',
+        url: 'https://www.youtube.com/watch?v=some_neet_video', // Placeholder
+        thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+    },
+    {
+        id: 'un-3',
+        title: 'JEE 2026 Strategy',
+        platform: 'Unacademy',
+        exam: 'JEE Main',
+        subject: 'General',
+        url: 'https://www.youtube.com/watch?v=strategy_video',
+        thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
     }
 ];
