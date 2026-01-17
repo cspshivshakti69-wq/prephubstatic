@@ -11,8 +11,12 @@ import VideosPage from './pages/videos/VideosPage';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageQuestions from './pages/admin/ManageQuestions';
+import ProfilePage from './pages/profile/ProfilePage';
+import Layout from './components/layout/Layout';
+
 // Placeholder imports for now
 // const QuizzesPage = () => <div>Quizzes Page</div>;
+
 
 const ProtectedRoute = ({ children, role }) => {
   const { user } = useAuth();
@@ -39,7 +43,7 @@ function AppRoutes() {
         <Route path="/notes" element={<NotesPage />} />
         <Route path="/videos" element={<VideosPage />} />
         <Route path="/calendar" element={<div>Calendar Page</div>} />
-        <Route path="/profile" element={<div>Profile Page</div>} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Route>
 
       {/* Admin Routes */}
