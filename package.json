@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://USERNAME.github.io/69buds/",
+  "homepage": "https://cspshivshakti69-wq.github.io/prephubstatic/",
   "scripts": {
     "dev": "vite",
     "build": "vite build && node scripts/fix-spa.js",
