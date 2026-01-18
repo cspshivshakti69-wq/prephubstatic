@@ -18,6 +18,8 @@ import ManageNotes from './pages/admin/ManageNotes';
 import MagicNotes from './pages/notes/MagicNotes';
 import Profile from './pages/profile/Profile'; // Updated Import
 import GroupDecision from './pages/social/GroupDecision';
+import SocialNap from './pages/social/SocialNap';
+import Chats from './pages/chat/Chats';
 import CalendarPage from './pages/calendar/CalendarPage';
 import Layout from './components/layout/Layout';
 import GeminiBot from './components/ai/GeminiBot'; // Updated Import
@@ -32,8 +34,11 @@ const ProtectedRoute = ({ children, role }) => {
 };
 
 function AppRoutes() {
+  const { user } = useAuth();
+
   return (
     <Routes>
+      <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
 
@@ -52,6 +57,8 @@ function AppRoutes() {
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/group-decision" element={<GroupDecision />} />
+        <Route path="/social-nap" element={<SocialNap />} />
+        <Route path="/chats" element={<Chats />} />
       </Route>
 
       {/* Admin Routes */}
@@ -68,7 +75,8 @@ function AppRoutes() {
         <Route path="/admin/settings" element={<div>Settings</div>} />
       </Route>
 
-      <Route path="/" element={<Navigate to="/dashboard" />} />
+      {/* Catch all - Redirect to Login/Dashboard */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
@@ -76,7 +84,7 @@ function AppRoutes() {
 function App() {
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <Router>
+      <Router basename="/">
         <AuthProvider>
           <AppRoutes />
           <GeminiBot />

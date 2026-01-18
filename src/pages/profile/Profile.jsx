@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getProfileOptions } from '../../utils/profileOptions';
+import EditProfileModal from '../../components/profile/EditProfileModal';
 
 const Profile = () => {
     const { user, logout, updateUser } = useAuth(); // Assuming updateUser exists in context
@@ -366,62 +367,22 @@ const Profile = () => {
             </div>
 
             {/* Edit Profile Modal */}
-            <AnimatePresence>
-                {isEditModalOpen && (
-                    <motion.div
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-                    >
-                        <motion.div
-                            initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
-                            className="bg-[#111] border border-cyan-500/30 rounded-3xl p-8 max-w-md w-full shadow-[0_0_50px_rgba(6,182,212,0.15)] relative"
-                        >
-                            <button onClick={() => setIsEditModalOpen(false)} className="absolute top-4 right-4 text-gray-500 hover:text-white"><LogOut size={20} className="rotate-45" /></button>
-
-                            <h2 className="text-2xl font-black text-white mb-6 flex items-center gap-2">
-                                <Edit2 className="text-cyan-400" /> Edit Profile
-                            </h2>
-
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block">Display Name</label>
-                                    <input
-                                        type="text"
-                                        value={editForm.name}
-                                        onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                                        className="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block">Aspirant Type</label>
-                                    <select
-                                        value={editForm.level}
-                                        onChange={(e) => setEditForm({ ...editForm, level: e.target.value })}
-                                        className="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-cyan-500 outline-none"
-                                    >
-                                        <option>JEE Aspirant</option>
-                                        <option>NEET Aspirant</option>
-                                        <option>Foundation</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block">Bio</label>
-                                    <textarea
-                                        value={editForm.bio}
-                                        onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
-                                        className="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-cyan-500 outline-none h-24 resize-none"
-                                    />
-                                </div>
-
-                                <div className="flex gap-3 mt-6">
-                                    <button onClick={() => setIsEditModalOpen(false)} className="flex-1 py-3 rounded-xl border border-white/10 text-gray-400 font-bold hover:bg-white/5">Cancel</button>
-                                    <button onClick={handleSaveProfile} className="flex-1 py-3 rounded-xl bg-cyan-500 text-black font-bold hover:bg-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.3)]">Save Changes</button>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            <EditProfileModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                user={{ name: user?.name, level: localStorage.getItem('user_level'), bio: localStorage.getItem('user_bio'), avatar }}
+                onSave={(data) => {
+                    if (updateUser) updateUser({ name: data.name });
+                    if (data.level) localStorage.setItem('user_level', data.level);
+                    if (data.bio) localStorage.setItem('user_bio', data.bio);
+                    if (data.avatar) {
+                        setAvatar(data.avatar);
+                        localStorage.setItem(`avatar_${user?.id || 'demo'}`, data.avatar);
+                    }
+                    setEditForm(prev => ({ ...prev, name: data.name, level: data.level, bio: data.bio }));
+                    setIsEditModalOpen(false);
+                }}
+            />
         </div>
     );
 };

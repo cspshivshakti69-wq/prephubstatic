@@ -5006,5 +5006,149 @@ export const videosBySubject = {
             "rating": 4.8,
             "duration": "01:10:00"
         }
+    ],
+    "MBBS": [
+        {
+            "id": "mbbs_v1",
+            "title": "General Anatomy Lectures - BD Chaurasia Line by Line",
+            "channel": "Asif Qureshi",
+            "videoId": "HcfVZzf1H3Y",
+            "thumbnail": "https://img.youtube.com/vi/HcfVZzf1H3Y/maxresdefault.jpg",
+            "views": "1.2M",
+            "rating": 4.9,
+            "duration": "01:00:00"
+        },
+        {
+            "id": "mbbs_v2",
+            "title": "Physiology One Shot: CNS",
+            "channel": "PW MedEd - Dr. Vivek",
+            "videoId": "dPEMLiey6F8",
+            "thumbnail": "https://img.youtube.com/vi/dPEMLiey6F8/maxresdefault.jpg",
+            "views": "900K",
+            "rating": 4.8,
+            "duration": "02:30:00"
+        },
+        {
+            "id": "mbbs_v3",
+            "title": "Biochemistry Full Course - Cycles Simplified",
+            "channel": "Dr. Rajesh Jambhulkar",
+            "videoId": "CoM_Tv9QMTM",
+            "thumbnail": "https://img.youtube.com/vi/CoM_Tv9QMTM/maxresdefault.jpg",
+            "views": "2.1M",
+            "rating": 4.9,
+            "duration": "01:45:00"
+        },
+        {
+            "id": "mbbs_v4",
+            "title": "Pathology of Inflammation (Robbins)",
+            "channel": "Dr. Devesh Mishra",
+            "videoId": "Y8w9g4F6z8Q",
+            "thumbnail": "https://img.youtube.com/vi/Y8w9g4F6z8Q/maxresdefault.jpg",
+            "views": "1.5M",
+            "rating": 4.9,
+            "duration": "03:00:00"
+        },
+        {
+            "id": "mbbs_v5",
+            "title": "Pharmacology: ANS Drugs",
+            "channel": "The Charsi of Medical Literature",
+            "videoId": "L6v3s8w8j8Q",
+            "thumbnail": "https://img.youtube.com/vi/L6v3s8w8j8Q/maxresdefault.jpg",
+            "views": "3M",
+            "rating": 4.8,
+            "duration": "00:45:00"
+        },
+        {
+            "id": "mbbs_v6",
+            "title": "General Medicine Fundamentals",
+            "channel": "Dr. Najeeb Lectures",
+            "videoId": "ZUrjM6slByo",
+            "thumbnail": "https://img.youtube.com/vi/ZUrjM6slByo/maxresdefault.jpg",
+            "views": "5M",
+            "rating": 5.0,
+            "duration": "04:00:00"
+        }
+    ],
+    "CodeWithHarry": [
+        {
+            "id": "cwh_1",
+            "title": "Web Development Full Course in Hindi",
+            "channel": "CodeWithHarry",
+            "videoId": "6mbwJ2xhgzM",
+            "thumbnail": "https://img.youtube.com/vi/6mbwJ2xhgzM/maxresdefault.jpg",
+            "views": "8.5M",
+            "rating": 4.9,
+            "duration": "15:00:00"
+        },
+        {
+            "id": "cwh_2",
+            "title": "C Language Full Course in Hindi",
+            "channel": "CodeWithHarry",
+            "videoId": "ZSPZob_1w9E",
+            "thumbnail": "https://img.youtube.com/vi/ZSPZob_1w9E/maxresdefault.jpg",
+            "views": "5.2M",
+            "rating": 4.9,
+            "duration": "10:30:00"
+        },
+        {
+            "id": "cwh_3",
+            "title": "Python full course for Beginners",
+            "channel": "CodeWithHarry",
+            "videoId": "gfDE2a7MKjA",
+            "thumbnail": "https://img.youtube.com/vi/gfDE2a7MKjA/maxresdefault.jpg",
+            "views": "12M",
+            "rating": 5.0,
+            "duration": "12:00:00"
+        },
+        {
+            "id": "cwh_4",
+            "title": "JavaScript Tutorial in Hindi",
+            "channel": "CodeWithHarry",
+            "videoId": "hKB-YGF14SY",
+            "thumbnail": "https://img.youtube.com/vi/hKB-YGF14SY/maxresdefault.jpg",
+            "views": "4M",
+            "rating": 4.8,
+            "duration": "08:45:00"
+        },
+        {
+            "id": "cwh_5",
+            "title": "Java Tutorial for Beginners",
+            "channel": "CodeWithHarry",
+            "videoId": "ntLJmHOJ0ME",
+            "thumbnail": "https://img.youtube.com/vi/ntLJmHOJ0ME/maxresdefault.jpg",
+            "views": "3.5M",
+            "rating": 4.8,
+            "duration": "14:00:00"
+        },
+        {
+            "id": "cwh_6",
+            "title": "Data Science Full Course",
+            "channel": "CodeWithHarry",
+            "videoId": "ua-CiDNNj30",
+            "thumbnail": "https://img.youtube.com/vi/ua-CiDNNj30/maxresdefault.jpg",
+            "views": "1.5M",
+            "rating": 4.9,
+            "duration": "09:15:00"
+        },
+        {
+            "id": "cwh_7",
+            "title": "React JS Tutorial in Hindi",
+            "channel": "CodeWithHarry",
+            "videoId": "RGKi6LSPDLU",
+            "thumbnail": "https://img.youtube.com/vi/RGKi6LSPDLU/maxresdefault.jpg",
+            "views": "2.8M",
+            "rating": 4.9,
+            "duration": "14:00:00"
+        },
+        {
+            "id": "cwh_8",
+            "title": "Flask Web Framework Tutorial",
+            "channel": "CodeWithHarry",
+            "videoId": "Z1RJmh_OqeA",
+            "thumbnail": "https://img.youtube.com/vi/Z1RJmh_OqeA/maxresdefault.jpg",
+            "views": "1M",
+            "rating": 4.8,
+            "duration": "07:30:00"
+        }
     ]
 };

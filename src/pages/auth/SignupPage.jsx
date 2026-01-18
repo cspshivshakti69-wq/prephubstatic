@@ -77,7 +77,7 @@ const SignupPage = () => {
                 >
                     <div className={`w-24 h-24 rounded-full p-1 bg-gradient-to-br ${chibi.color} shadow-[0_0_30px_rgba(255,255,255,0.4)]`}>
                         <img
-                            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${chibi.seed}&style=circle`}
+                            src={`${import.meta.env.VITE_AVATAR_BASE_URL}?seed=${chibi.seed}&style=circle`}
                             alt={chibi.name}
                             className="w-full h-full rounded-full bg-white/90 border-2 border-white"
                         />

@@ -2,53 +2,47 @@ import React, { useState, useEffect } from 'react';
 import YouTube from 'react-youtube';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Star, Clock, Filter, Search, Zap, X } from 'lucide-react';
-import { videosBySubject } from '../../data/videosData';
-import { pyqVideosBySubject } from '../../data/pyqVideosData';
-import { neetPyqVideos } from '../../data/neetPyqVideosData';
-import { jeeChemistryPyqVideos } from '../../data/jeeChemistryPyqVideosData';
-import { jeeMathsPyqVideos } from '../../data/jeeMathsPyqVideosData';
+import { useFirestore } from '../../hooks/useFirestore'; // Import hook
 
 const VideosPage = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [viewMode, setViewMode] = useState('Main'); // 'Main', 'JEE_PYQ', 'NEET_PYQ'
     const [playingVideoId, setPlayingVideoId] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+
+    // Fetch all videos from Firestore
+    const { data: firestoreVideos, loading } = useFirestore('videos');
     const [allVideos, setAllVideos] = useState([]);
 
     useEffect(() => {
-        try {
-            let data = {};
-            if (viewMode === 'Main') {
-                data = videosBySubject;
-            } else if (viewMode === 'JEE_PYQ') {
-                // Merge general JEE PYQs with specialized Chemistry and Maths ones
-                const flattenedJee = [
-                    ...Object.entries(pyqVideosBySubject).flatMap(([subject, videos]) =>
-                        (videos || []).map(v => ({ ...v, category: subject }))
-                    ),
-                    ...jeeChemistryPyqVideos.map(v => ({ ...v, category: 'Chemistry' })),
-                    ...jeeMathsPyqVideos.map(v => ({ ...v, category: 'Maths' }))
-                ];
-                setAllVideos(flattenedJee);
-                console.log("JEE PYQ Videos loaded:", flattenedJee.length);
-                return;
-            } else if (viewMode === 'NEET_PYQ') {
-                const flattenedNeet = (neetPyqVideos || []).map(v => ({ ...v, category: 'Biology' }));
-                setAllVideos(flattenedNeet);
-                console.log("NEET PYQ Videos loaded:", flattenedNeet.length);
-                return;
-            }
+        if (loading) return;
 
-            const flattened = Object.entries(data).flatMap(([subject, videos]) =>
-                (videos || []).map(v => ({ ...v, category: subject }))
+        // Filter videos based on viewMode using the data from Firestore
+        // We assume Firestore data has 'category_key' or 'category' that maps to these modes
+        // For now, simple client-side logic to mimic previous behavior
+        let filtered = [];
+        if (viewMode === 'Main') {
+            filtered = firestoreVideos.filter(v =>
+                !v.category_key?.includes('PYQ') && !v.category_key?.includes('CodeWithHarry') && v.category_key !== 'MBBS'
             );
-            setAllVideos(flattened);
-            console.log(`${viewMode} Videos loaded:`, flattened.length);
-        } catch (error) {
-            console.error("Error loading video data:", error);
-            setAllVideos([]);
+        } else if (viewMode === 'JEE_PYQ') {
+            filtered = firestoreVideos.filter(v => v.category_key?.includes('JEE PYQ') || v.category_key === 'JEE Chemistry PYQ' || v.category_key === 'JEE Maths PYQ');
+        } else if (viewMode === 'NEET_PYQ') {
+            filtered = firestoreVideos.filter(v => v.category_key?.includes('NEET PYQ'));
+        } else if (viewMode === 'MBBS') {
+            filtered = firestoreVideos.filter(v => v.category_key === 'MBBS');
+        } else if (viewMode === 'Engineering') {
+            filtered = firestoreVideos.filter(v => v.category_key === 'CodeWithHarry');
         }
-    }, [viewMode]);
+
+        // If data structure differs, we might need adjustments. 
+        // For simple migration, we trust 'category_key' to hold the subject/type string.
+        setAllVideos(filtered.length > 0 ? filtered : firestoreVideos); // Fallback to all if logic fails? No, better empty.
+
+        // Actually, just set allVideos to the filtered list
+        setAllVideos(filtered);
+
+    }, [viewMode, firestoreVideos, loading]);
 
     const filteredVideos = (allVideos || []).filter(v => {
         const matchesCategory = selectedCategory === 'All' || v.category === selectedCategory;
@@ -140,15 +134,47 @@ const VideosPage = () => {
                     <p className="text-gray-500 text-sm mt-2 tracking-widest font-light">ACCESS ELITE KNOWLEDGE STREAMS</p>
                 </div>
 
-                <div className="relative w-full md:w-96">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/50" size={18} />
-                    <input
-                        type="text"
-                        placeholder="Search video library..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-[#161b29] border border-cyan-500/20 rounded-full py-4 pl-12 pr-6 text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all shadow-inner"
-                    />
+                <div className="relative w-full md:w-96 flex gap-2">
+                    <div className="relative flex-1">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/50" size={18} />
+                        <input
+                            type="text"
+                            placeholder="Search video library..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full bg-[#161b29] border border-cyan-500/20 rounded-full py-4 pl-12 pr-6 text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all shadow-inner"
+                        />
+                    </div>
+                    <button
+                        onClick={() => {
+                            const url = prompt("Enter YouTube URL:");
+                            if (url) {
+                                // Simple extraction of ID for demo
+                                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+                                const match = url.match(regExp);
+                                if (match && match[2].length === 11) {
+                                    const videoId = match[2];
+                                    const title = prompt("Enter Video Title:") || "New Video";
+                                    const newVideo = {
+                                        id: Date.now(),
+                                        videoId: videoId,
+                                        title: title,
+                                        channel: "User Added",
+                                        category: selectedCategory !== 'All' ? selectedCategory : 'General',
+                                        duration: "New"
+                                    };
+                                    setAllVideos(prev => [newVideo, ...prev]);
+                                    alert("Video Added!");
+                                } else {
+                                    alert("Invalid YouTube URL");
+                                }
+                            }
+                        }}
+                        className="bg-cyan-500 text-black p-4 rounded-full font-bold hover:bg-cyan-400 transition-colors"
+                        title="Add YouTube Video"
+                    >
+                        +
+                    </button>
                 </div>
             </div>
 
@@ -157,7 +183,9 @@ const VideosPage = () => {
                 {[
                     { id: 'Main', label: 'Recommended Videos' },
                     { id: 'JEE_PYQ', label: 'JEE PYQ Solutions' },
-                    { id: 'NEET_PYQ', label: 'NEET PYQ Solutions' }
+                    { id: 'NEET_PYQ', label: 'NEET PYQ Solutions' },
+                    { id: 'MBBS', label: 'MBBS Videos' },
+                    { id: 'Engineering', label: 'Engineering / CodeWithHarry' }
                 ].map(mode => (
                     <button
                         key={mode.id}

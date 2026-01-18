@@ -6,8 +6,7 @@ import {
 } from 'lucide-react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import NotePDF from '../../components/pdf/NotePDF';
-import { notesData } from '../../data/notesData';
-import { neetPyqNotes } from '../../data/neetPyqNotesData';
+import { useFirestore } from '../../hooks/useFirestore'; // Import hook
 
 const MagicNotes = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
@@ -19,20 +18,39 @@ const MagicNotes = () => {
     // Flatten notes for the grid view safely
     const [allNotes, setAllNotes] = useState([]);
 
+    // Fetch all notes from Firestore
+    const { data: firestoreNotes, loading } = useFirestore('notes');
+
     useEffect(() => {
+        if (loading) return;
+
         try {
             if (viewMode === 'Main') {
-                setAllNotes(notesData || []);
-                console.log("Main Notes loaded:", (notesData || []).length);
-            } else {
-                setAllNotes(neetPyqNotes || []);
-                console.log("NEET PYQ Notes loaded:", (neetPyqNotes || []).length);
+                // Main notes are those NOT marked as PYQ explicitly or just general ones
+                // In my upload script, main notes had 'exam' and 'subject'.
+                // NEET PYQ notes had 'type'='PYQ'.
+                const main = firestoreNotes.filter(n => n.type !== 'PYQ');
+                setAllNotes(main);
+                console.log("Main Notes loaded:", main.length);
+            } else if (viewMode === 'NEET_PYQ') {
+                const pyq = firestoreNotes.filter(n => n.type === 'PYQ' || n.exam === 'NEET' && n.type === 'PYQ'); // Check logic
+                setAllNotes(pyq);
+                console.log("NEET PYQ Notes loaded:", pyq.length);
+            } else if (viewMode === 'MBBS') {
+                // Filter main data for MBBS subjects
+                const mbbsSubjects = ['Anatomy', 'Physiology', 'Pathology', 'Pharmacology'];
+                const filtered = firestoreNotes.filter(n => mbbsSubjects.includes(n.subject));
+                setAllNotes(filtered);
+            } else if (viewMode === 'Engineering') {
+                const engSubjects = ['C Programming', 'Python', 'WebDev', 'Java'];
+                const filtered = firestoreNotes.filter(n => engSubjects.includes(n.subject));
+                setAllNotes(filtered);
             }
         } catch (e) {
             console.error("Error loading notes:", e);
             setAllNotes([]);
         }
-    }, [viewMode]);
+    }, [viewMode, firestoreNotes, loading]);
 
     const filteredNotes = (allNotes || []).filter(note =>
         (selectedCategory === 'All' || note.subject === selectedCategory) &&
@@ -142,6 +160,24 @@ const MagicNotes = () => {
                         >
                             NEET PYQ Notes
                         </button>
+                        <button
+                            onClick={() => { setViewMode('MBBS'); setSelectedCategory('All'); }}
+                            className={`px-6 py-3 rounded-full font-bold text-sm transition-all ${viewMode === 'MBBS'
+                                ? 'bg-pink-600 text-white shadow-[0_0_15px_rgba(219,39,119,0.4)]'
+                                : 'bg-white/5 text-gray-400 border border-white/10 hover:border-pink-500/50'
+                                }`}
+                        >
+                            MBBS Notes
+                        </button>
+                        <button
+                            onClick={() => { setViewMode('Engineering'); setSelectedCategory('All'); }}
+                            className={`px-6 py-3 rounded-full font-bold text-sm transition-all ${viewMode === 'Engineering'
+                                ? 'bg-orange-600 text-white shadow-[0_0_15px_rgba(234,88,12,0.4)]'
+                                : 'bg-white/5 text-gray-400 border border-white/10 hover:border-orange-500/50'
+                                }`}
+                        >
+                            CodeWithHarry Notes
+                        </button>
                     </div>
                 </div>
             </header>
@@ -195,7 +231,7 @@ const MagicNotes = () => {
 
                         <div className="space-y-2">
                             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Subject Filters</h3>
-                            {['All', 'Physics', 'Chemistry', 'Maths', 'Biology'].map(cat => (
+                            {['All', 'Physics', 'Chemistry', 'Maths', 'Biology', 'Anatomy', 'C Programming', 'Python', 'WebDev'].map(cat => (
                                 <button
                                     key={cat}
                                     onClick={() => setSelectedCategory(cat)}
@@ -309,11 +345,38 @@ const MagicNotes = () => {
                                 <p className="text-gray-400">Search or upload high-quality study materials</p>
                             </div>
 
-                            <div className="border-2 border-dashed border-gray-700 rounded-xl p-8 mb-6 text-center hover:border-cyan-500/50 transition-colors cursor-pointer bg-black/20">
-                                <p className="text-gray-500">Drop files to add to your library</p>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-1">Note Title</label>
+                                    <input type="text" id="noteTitle" className="w-full bg-[#161b29] border border-white/10 rounded-xl p-3 text-white focus:border-cyan-500 outline-none" placeholder="e.g. Physics Formula Sheet" />
+                                </div>
+                                <div className="border-2 border-dashed border-gray-700 rounded-xl p-8 mb-6 text-center hover:border-cyan-500/50 transition-colors cursor-pointer bg-black/20"
+                                    onClick={() => document.getElementById('noteFile').click()}
+                                >
+                                    <input type="file" id="noteFile" className="hidden" accept=".pdf,.txt,.md" />
+                                    <p className="text-gray-500">Click to select PDF or Text file</p>
+                                </div>
                             </div>
 
-                            <button onClick={() => setIsUploadModalOpen(false)} className="w-full py-4 rounded-xl bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition-colors">
+                            <button onClick={() => {
+                                const title = document.getElementById('noteTitle').value;
+                                const file = document.getElementById('noteFile').files[0];
+                                if (title && file) {
+                                    const newNote = {
+                                        id: Date.now(),
+                                        title,
+                                        author: 'You',
+                                        subject: selectedCategory !== 'All' ? selectedCategory : 'General',
+                                        shortDescription: 'Uploaded user note.',
+                                        type: 'custom'
+                                    };
+                                    setAllNotes(prev => [newNote, ...prev]);
+                                    setIsUploadModalOpen(false);
+                                    alert("Note uploaded!");
+                                } else {
+                                    alert("Please provide title and file.");
+                                }
+                            }} className="w-full py-4 rounded-xl bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition-colors">
                                 Upload Now
                             </button>
                         </motion.div>

@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { VIDEO_DATA } from '../../data/videos';
+import { videosBySubject } from '../../data/videosData';
 import { Video, Plus, Edit2, Trash2, ExternalLink, Play } from 'lucide-react';
 
 const ManageVideos = () => {
-    // Flatten the nested data for "admin view" or keep it structured.
-    // For simplicity, we'll flatten it initially to list all, but provide filter options
+    // Check key types to guess exam OR just map all
     const getAllVideos = () => {
         let all = [];
-        Object.keys(VIDEO_DATA).forEach(exam => {
-            Object.keys(VIDEO_DATA[exam]).forEach(platform => {
-                const vidList = VIDEO_DATA[exam][platform].map(v => ({ ...v, exam, platform }));
-                all = [...all, ...vidList];
-            });
+        Object.keys(videosBySubject).forEach(subject => {
+            const list = videosBySubject[subject].map(v => ({
+                ...v,
+                exam: ['Physics', 'Chemistry', 'Maths'].includes(subject) ? 'JEE' :
+                    ['Biology'].includes(subject) ? 'NEET' :
+                        'MBBS', // Simple heuristic
+                subject
+            }));
+            all = [...all, ...list];
         });
         return all;
     };
@@ -42,7 +45,7 @@ const ManageVideos = () => {
 
             {/* Admin Filters */}
             <div className="flex gap-2">
-                {['All', 'JEE', 'NEET'].map(f => (
+                {['All', 'JEE', 'NEET', 'MBBS'].map(f => (
                     <button
                         key={f}
                         onClick={() => setFilterExam(f)}

@@ -3614,6 +3614,98 @@ export const NOTES_DATA = {
                 "type": "Download"
             }
         ]
+    },
+    'MBBS': {
+        'Anatomy': [
+            {
+                "id": "mbbs_n1",
+                "title": "Anatomy Handwritten Notes (Upper Limb)",
+                "author": "Selfless Medic",
+                "description": "High yield handwritten notes for 1st Year MBBS.",
+                "pages": 120,
+                "type": "Download"
+            }
+        ],
+        'Physiology': [
+            {
+                "id": "mbbs_n2",
+                "title": "Physiology Summaries (Guyton)",
+                "author": "Medicos PDF",
+                "description": "Chapter-wise summaries for rapid revision.",
+                "pages": 200,
+                "type": "Download"
+            }
+        ],
+        'Pathology': [
+            {
+                "id": "mbbs_n3",
+                "title": "Pathology Color-Coded Notes",
+                "author": "Notespaedia",
+                "description": "Visual notes for General Pathology.",
+                "pages": 150,
+                "type": "Download"
+            }
+        ],
+        'Pharmacology': [
+            {
+                "id": "mbbs_n4",
+                "title": "Pharmacology Mnemonics",
+                "author": "GRG",
+                "description": "Best mnemonics for drug classification.",
+                "pages": 80,
+                "type": "Download"
+            }
+        ]
+    },
+    'CodeWithHarry': {
+        'C Programming': [
+            {
+                "id": "cwh_n1",
+                "title": "C Language Handwriting Notes",
+                "author": "CodeWithHarry",
+                "description": "Complete handwritten notes for C language.",
+                "pages": 150,
+                "type": "Download"
+            }
+        ],
+        'Python': [
+            {
+                "id": "cwh_n2",
+                "title": "Python Ultimate Handbook",
+                "author": "CodeWithHarry",
+                "description": "Zero to Hero Python notes.",
+                "pages": 120,
+                "type": "Download"
+            }
+        ],
+        'WebDev': [
+            {
+                "id": "cwh_n3",
+                "title": "HTML & CSS Cheatsheet",
+                "author": "CodeWithHarry",
+                "description": "Quick revision for frontend.",
+                "pages": 20,
+                "type": "Download"
+            },
+            {
+                "id": "cwh_n4",
+                "title": "JavaScript Notes",
+                "author": "CodeWithHarry",
+                "description": "Advanced JS concepts simplified.",
+                "pages": 90,
+                "type": "Download"
+            }
+        ],
+        'Java': [
+            {
+                "id": "cwh_n5",
+                "title": "Java Core Notes",
+                "author": "CodeWithHarry",
+                "description": "Java OOPs concepts notes.",
+                "pages": 140,
+                "type": "Download"
+            }
+        ]
     }
 };
 
@@ -3621,5 +3713,7 @@ export const NOTES_DATA = {
 export const notesData = [
     // Flat mapping of the above nested data for MagicNotes logic
     ...Object.entries(NOTES_DATA['JEE']).flatMap(([subject, notes]) => notes.map(n => ({ ...n, subject }))),
-    ...Object.entries(NOTES_DATA['NEET']).flatMap(([subject, notes]) => notes.map(n => ({ ...n, subject })))
+    ...Object.entries(NOTES_DATA['NEET']).flatMap(([subject, notes]) => notes.map(n => ({ ...n, subject }))),
+    ...Object.entries(NOTES_DATA['MBBS']).flatMap(([subject, notes]) => notes.map(n => ({ ...n, subject }))),
+    ...Object.entries(NOTES_DATA['CodeWithHarry']).flatMap(([subject, notes]) => notes.map(n => ({ ...n, subject })))
 ];

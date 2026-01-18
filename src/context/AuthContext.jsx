@@ -29,6 +29,15 @@ export const AuthProvider = ({ children }) => {
                 email: email,
                 role: 'admin',
                 avatar: 'naviya',
+                aspirantType: 'Admin'
+            };
+        } else if (email === 'mbbs@examprephub.com' && password === 'mbbs123') {
+            loggedUser = {
+                name: 'Dr. Future',
+                email: email,
+                role: 'mbbs',
+                avatar: 'aqua',
+                aspirantType: 'MBBS'
             };
         } else if (password.length >= 6) {
             loggedUser = {
@@ -36,6 +45,7 @@ export const AuthProvider = ({ children }) => {
                 email: email,
                 role: 'user',
                 avatar: 'aqua',
+                aspirantType: 'JEE' // Default
             };
         }
 

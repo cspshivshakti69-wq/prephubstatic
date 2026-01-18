@@ -1,13 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import AnimeMascot from '../../components/anime/AnimeMascot';
 import { StatsCharts } from '../../components/dashboard/StatsCharts';
 import {
     CheckSquare, BarChart2, TrendingUp,
-    BookOpen, Video, FileText, Calendar, Target, HelpCircle
+    BookOpen, Video, FileText, Calendar, Target, HelpCircle, ChevronRight
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import SocialNap from '../social/SocialNap';
+import RoadmapTracker from '../../components/dashboard/RoadmapTracker';
 
 const StatCard = ({ icon: Icon, label, value, color }) => (
     <motion.div
@@ -44,6 +46,16 @@ const ActionCard = ({ title, desc, icon: Icon, color, to }) => {
 
 const DashboardPage = () => {
     const { user } = useAuth();
+    console.log(user);
+    const [isSocialNapOpen, setIsSocialNapOpen] = useState(() => {
+        return localStorage.getItem('isSocialNapOpen') === 'true';
+    });
+
+    const toggleSocialNap = () => {
+        const newState = !isSocialNapOpen;
+        setIsSocialNapOpen(newState);
+        localStorage.setItem('isSocialNapOpen', newState);
+    };
 
     // In real app, fetch these from Context or API based on user history
     const stats = useMemo(() => ({
@@ -73,6 +85,57 @@ const DashboardPage = () => {
                     <p className="font-bold text-lg italic">"Dream Bigger. Do Bigger."</p>
                 </div>
             </div>
+
+            {/* Social Nap Entry (Inline Expandable) */}
+            <div className="space-y-4">
+                <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    onClick={toggleSocialNap}
+                    className={`bg-black border rounded-3xl p-1 cursor-pointer group shadow-xl relative overflow-hidden transition-all ${isSocialNapOpen ? 'border-cyan-500 shadow-[0_0_20px_rgba(6,182,212,0.3)]' : 'border-white/10'}`}
+                >
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-900/40 to-cyan-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="bg-[#0a0a0a] rounded-[22px] p-6 flex items-center justify-between relative z-10 border border-white/5 group-hover:border-cyan-500/30 transition-colors">
+                        <div className="flex items-center gap-6">
+                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(168,85,247,0.3)]">
+                                <Video size={32} />
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-black text-white flex items-center gap-3">
+                                    Social Nap
+                                    <span className="text-xs font-bold px-2 py-0.5 rounded bg-red-500 text-white animate-pulse">LIVE</span>
+                                </h2>
+                                <p className="text-gray-400 font-medium">{isSocialNapOpen ? 'Click to collapse social feed' : 'Join 2 active study rooms • 15 friends online'}</p>
+                            </div>
+                        </div>
+
+                        <div className="hidden md:flex items-center gap-3">
+                            <motion.div
+                                animate={{ rotate: isSocialNapOpen ? 90 : 0 }}
+                                className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:bg-cyan-500 group-hover:text-black transition-all"
+                            >
+                                <ChevronRight size={24} />
+                            </motion.div>
+                        </div>
+                    </div>
+                </motion.div>
+
+                <AnimatePresence>
+                    {isSocialNapOpen && (
+                        <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden"
+                        >
+                            <SocialNap />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+
+            {/* Roadmap Tracker */}
+            <RoadmapTracker />
 
             {/* Upcoming Exams (Countdown) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

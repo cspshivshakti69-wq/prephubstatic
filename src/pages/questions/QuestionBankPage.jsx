@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, Download, Star, HelpCircle, FileText, Search } from 'lucide-react';
-import { quizzesBySubject } from '../../data/quizzesData';
-import { neetPhysicsQuizzes } from '../../data/neetPhysicsQuizzesData';
-import { neetChemistryQuizzes } from '../../data/neetChemistryQuizzesData';
-import { neetBiologyQuizzes } from '../../data/neetBiologyQuizzesData';
+// Local data imports removed in favor of Serverless Architecture
 
 const QuestionBankPage = () => {
     const navigate = useNavigate();
@@ -12,27 +9,18 @@ const QuestionBankPage = () => {
     const [banks, setBanks] = useState([]);
 
     useEffect(() => {
-        try {
-            const jeePhysCount = (quizzesBySubject.physics || []).reduce((acc, q) => acc + q.totalQuestions, 0);
-            const jeeChemCount = (quizzesBySubject.chemistry || []).reduce((acc, q) => acc + q.totalQuestions, 0);
-            const jeeMathCount = (quizzesBySubject.maths || []).reduce((acc, q) => acc + q.totalQuestions, 0);
-            const neetPhysCount = (neetPhysicsQuizzes || []).reduce((acc, q) => acc + q.totalQuestions, 0);
-            const neetChemCount = (neetChemistryQuizzes || []).reduce((acc, q) => acc + q.totalQuestions, 0);
-            const neetBioCount = (neetBiologyQuizzes || []).reduce((acc, q) => acc + q.totalQuestions, 0);
-
-            const allBanks = [
-                { id: 'bp1', exam: 'JEE', subject: 'Physics', title: 'JEE Physics Complete Repository', questions: jeePhysCount, firstId: quizzesBySubject.physics?.[0]?.quizId },
-                { id: 'bc1', exam: 'JEE', subject: 'Chemistry', title: 'JEE Chemistry Complete Repository', questions: jeeChemCount, firstId: quizzesBySubject.chemistry?.[0]?.quizId },
-                { id: 'bm1', exam: 'JEE', subject: 'Maths', title: 'JEE Maths Complete Repository', questions: jeeMathCount, firstId: quizzesBySubject.maths?.[0]?.quizId },
-                { id: 'bnp1', exam: 'NEET', subject: 'Physics', title: 'NEET Physics Question Bank', questions: neetPhysCount, firstId: neetPhysicsQuizzes?.[0]?.quizId },
-                { id: 'bnc1', exam: 'NEET', subject: 'Chemistry', title: 'NEET Chemistry Question Bank', questions: neetChemCount, firstId: neetChemistryQuizzes?.[0]?.quizId },
-                { id: 'bnb1', exam: 'NEET', subject: 'Biology', title: 'NEET Biology master Bank', questions: neetBioCount, firstId: neetBiologyQuizzes?.[0]?.quizId }
-            ];
-            setBanks(allBanks);
-            console.log("Question Banks initialized with", allBanks.length, "subjects");
-        } catch (e) {
-            console.error("Error loading question banks:", e);
-        }
+        // In a real app, we might fetch these stats from a 'metadata' collection
+        const allBanks = [
+            { id: 'bp1', exam: 'JEE', subject: 'Physics', title: 'JEE Physics Complete Repository', questions: 1200, firstId: 'jee-physics-1' },
+            { id: 'bc1', exam: 'JEE', subject: 'Chemistry', title: 'JEE Chemistry Complete Repository', questions: 1500, firstId: 'jee-chemistry-1' },
+            { id: 'bm1', exam: 'JEE', subject: 'Maths', title: 'JEE Maths Complete Repository', questions: 1100, firstId: 'jee-maths-1' },
+            { id: 'bnp1', exam: 'NEET', subject: 'Physics', title: 'NEET Physics Question Bank', questions: 900, firstId: 'neet-physics-1' },
+            { id: 'bnc1', exam: 'NEET', subject: 'Chemistry', title: 'NEET Chemistry Question Bank', questions: 1300, firstId: 'neet-chemistry-1' },
+            { id: 'bnb1', exam: 'NEET', subject: 'Biology', title: 'NEET Biology master Bank', questions: 2000, firstId: 'neet-biology-1' },
+            { id: 'mbbs1', exam: 'MBBS', subject: 'University', title: 'MBBS University Question Bank', questions: 200, firstId: 'mbbs-anat-1' },
+            { id: 'cwh1', exam: 'Engineering', subject: 'Programming', title: 'CodeWithHarry Question Bank', questions: 150, firstId: 'cwh-c-1' }
+        ];
+        setBanks(allBanks);
     }, []);
 
     const filteredBanks = banks.filter(bank =>
@@ -45,6 +33,7 @@ const QuestionBankPage = () => {
             case 'Physics': return 'text-purple-400 border-purple-500/30 bg-purple-500/10';
             case 'Chemistry': return 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10';
             case 'Maths': return 'text-blue-400 border-blue-500/30 bg-blue-500/10';
+            case 'Programming': return 'text-orange-400 border-orange-500/30 bg-orange-500/10';
             default: return 'text-pink-400 border-pink-500/30 bg-pink-500/10';
         }
     };

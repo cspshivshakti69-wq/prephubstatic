@@ -1,13 +1,55 @@
-import React from 'react';
-import { Calendar as CalIcon, Clock, CheckCircle, Video, FileText, ChevronRight, Star } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calendar as CalIcon, Clock, CheckCircle, Video, FileText, ChevronRight, Star, Plus, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const CalendarPage = () => {
-    const events = [
-        { id: 1, type: 'quiz', subject: 'PHYSICS', title: 'Mechanics Revision Day', time: '10:00 AM', status: 'Upcoming' },
-        { id: 2, type: 'live', subject: 'MATHS', title: 'Live Class: Calculus', time: '02:00 PM', status: 'Live Now' },
-        { id: 3, type: 'note', subject: 'CHEMISTRY', title: 'Read Organic Notes', time: '05:00 PM', status: 'Pending' },
-        { id: 4, type: 'quiz', subject: 'BIOLOGY', title: 'Mock Test 4', time: '08:00 PM', status: 'Upcoming' },
+    // Initial dummy data as fallback
+    const INITIAL_EVENTS = [
+        { id: 1, type: 'quiz', subject: 'PHYSICS', title: 'Mechanics Revision Day', time: '10:00 AM', status: 'Upcoming', description: 'Complete Chapter 4 revision.' },
+        { id: 2, type: 'live', subject: 'MATHS', title: 'Live Class: Calculus', time: '02:00 PM', status: 'Live Now', description: 'Join via Zoom link.' },
+        { id: 3, type: 'note', subject: 'CHEMISTRY', title: 'Read Organic Notes', time: '05:00 PM', status: 'Pending', description: 'Review reaction mechanisms.' },
+        { id: 4, type: 'quiz', subject: 'BIOLOGY', title: 'Mock Test 4', time: '08:00 PM', status: 'Upcoming', description: 'Full syllabus mock test.' },
     ];
+
+    const [events, setEvents] = useState(() => {
+        try {
+            const saved = localStorage.getItem('calendar_events');
+            return saved ? JSON.parse(saved) : INITIAL_EVENTS;
+        } catch (e) {
+            return INITIAL_EVENTS;
+        }
+    });
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newEvent, setNewEvent] = useState({
+        title: '',
+        date: new Date().toISOString().split('T')[0],
+        time: '10:00',
+        subject: 'General',
+        type: 'other',
+        description: ''
+    });
+
+    useEffect(() => {
+        localStorage.setItem('calendar_events', JSON.stringify(events));
+    }, [events]);
+
+    const handleAddEvent = (e) => {
+        e.preventDefault();
+        if (!newEvent.title || !newEvent.date) return;
+
+        const eventToAdd = {
+            id: Date.now(),
+            ...newEvent,
+            status: 'Upcoming',
+            time: newEvent.time // Simplified for demo
+        };
+
+        setEvents(prev => [...prev, eventToAdd]);
+        setIsModalOpen(false);
+        setNewEvent({ title: '', date: new Date().toISOString().split('T')[0], time: '10:00', subject: 'General', type: 'other', description: '' });
+        alert("Event added successfully!");
+    };
 
     const getTypeIcon = (type) => {
         switch (type) {
@@ -26,7 +68,14 @@ const CalendarPage = () => {
     };
 
     return (
-        <div className="flex flex-col lg:flex-row gap-8 h-[calc(100vh-140px)]">
+        <div className="flex flex-col lg:flex-row gap-8 h-[calc(100vh-140px)] relative">
+            {/* Header Button for Mobile (or if layout has space) - though usually in Sidebar header */}
+            <div className="lg:hidden mb-4">
+                <button onClick={() => setIsModalOpen(true)} className="w-full py-3 bg-cyan-500 text-black font-bold rounded-xl flex items-center justify-center gap-2">
+                    <Plus size={18} /> Add New Event
+                </button>
+            </div>
+
             {/* Main Calendar Area (Placeholder for full calendar) */}
             <div className="flex-1 bg-gray-900/30 border border-white/5 rounded-3xl p-6 hidden lg:flex flex-col relative overflow-hidden">
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] opacity-10"></div>
@@ -50,17 +99,25 @@ const CalendarPage = () => {
                         </div>
                     ))}
                 </div>
+
+                {/* Floating Add Button for Desktop */}
+                <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="absolute bottom-6 right-6 p-4 bg-cyan-500 text-black rounded-full shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:scale-110 transition-transform z-20"
+                >
+                    <Plus size={24} />
+                </button>
             </div>
 
             {/* Event Timeline / Day View */}
             <div className="w-full lg:w-96 flex flex-col gap-6">
                 <div className="flex items-center justify-between">
-                    <h3 className="font-bold text-lg text-gray-200">Today's Schedule</h3>
+                    <h3 className="font-bold text-lg text-gray-200">Upcoming Events</h3>
                     <button className="text-xs font-bold text-cyan-400 uppercase tracking-wider hover:text-cyan-300">View All</button>
                 </div>
 
-                <div className="space-y-4 overflow-y-auto custom-scrollbar pr-2">
-                    {events.map((event, idx) => (
+                <div className="space-y-4 overflow-y-auto custom-scrollbar pr-2 flex-1">
+                    {events.length > 0 ? events.slice().reverse().map((event, idx) => (
                         <div key={idx} className="bg-black border border-white/10 rounded-2xl p-5 hover:border-cyan-500/30 transition-all group hover:shadow-lg hover:shadow-cyan-500/5">
                             <div className="flex items-start justify-between mb-2">
                                 <div className={`p-2 rounded-lg ${getTypeColor(event.type)}`}>
@@ -78,7 +135,9 @@ const CalendarPage = () => {
                                 View Details <Star size={10} fill="currentColor" />
                             </button>
                         </div>
-                    ))}
+                    )) : (
+                        <div className="text-center py-10 text-gray-500">No events scheduled.</div>
+                    )}
                 </div>
 
                 <div className="mt-auto bg-gradient-to-br from-purple-900/20 to-blue-900/20 p-5 rounded-2xl border border-white/10">
@@ -92,6 +151,57 @@ const CalendarPage = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Add Event Modal */}
+            <AnimatePresence>
+                {isModalOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-[#111] border border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl relative"
+                        >
+                            <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 text-gray-500 hover:text-white"><X size={20} /></button>
+                            <h2 className="text-2xl font-black text-white mb-6">Add New Event</h2>
+
+                            <form onSubmit={handleAddEvent} className="space-y-4">
+                                <div>
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Event Title</label>
+                                    <input required type="text" value={newEvent.title} onChange={e => setNewEvent({ ...newEvent, title: e.target.value })} className="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-cyan-500 outline-none" placeholder="e.g. Physics Mock Test" />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Date</label>
+                                        <input required type="date" value={newEvent.date} onChange={e => setNewEvent({ ...newEvent, date: e.target.value })} className="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-cyan-500 outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Time</label>
+                                        <input required type="time" value={newEvent.time} onChange={e => setNewEvent({ ...newEvent, time: e.target.value })} className="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-cyan-500 outline-none" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Type</label>
+                                    <select value={newEvent.type} onChange={e => setNewEvent({ ...newEvent, type: e.target.value })} className="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-cyan-500 outline-none">
+                                        <option value="quiz">Quiz</option>
+                                        <option value="live">Live Class</option>
+                                        <option value="note">Study Session</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Description</label>
+                                    <textarea value={newEvent.description} onChange={e => setNewEvent({ ...newEvent, description: e.target.value })} rows={3} className="w-full bg-black border border-white/10 rounded-xl p-3 text-white focus:border-cyan-500 outline-none resize-none" placeholder="Add details..."></textarea>
+                                </div>
+
+                                <button type="submit" className="w-full py-3 bg-cyan-500 text-black font-bold rounded-xl hover:bg-cyan-400 transition-colors shadow-[0_0_15px_rgba(6,182,212,0.3)] mt-2">
+                                    Save Event
+                                </button>
+                            </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

@@ -46,7 +46,7 @@ const ProfilePage = () => {
                         <div className="relative inline-block mb-4">
                             <div className="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 mx-auto">
                                 <img
-                                    src={user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`}
+                                    src={user?.avatar || `${import.meta.env.VITE_AVATAR_BASE_URL}?seed=${user?.email}`}
                                     alt="Avatar"
                                     className="w-full h-full rounded-full bg-white object-cover border-4 border-white"
                                 />

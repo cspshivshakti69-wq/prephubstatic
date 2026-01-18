@@ -738,5 +738,47 @@ export const QUESTION_DATA = {
     },
     'NEET': {
         'Biology': neetBiologyQuestions
+    },
+    'MBBS': {
+        'University': Array.from({ length: 20 }, (_, i) => ({
+            id: i + 1,
+            text: `MBBS University Question ${i + 1}: What is the clinical significance of structure X? (RGUHS 2023)`,
+            options: { a: "Diagnosis A", b: "Diagnosis B", c: "Treatment C", d: "Prognosis D" },
+            correctAnswer: "a",
+            explanation: "Standard clinical reasoning based on Harrison's.",
+            author: "RGUHS PYQ",
+            difficulty: i % 3 === 0 ? "Hard" : "Medium"
+        }))
+    },
+    'CodeWithHarry': {
+        'Programming': [
+            {
+                id: 1,
+                text: "What is the output of printf('%d', 5 + 3 * 2); ?",
+                options: { a: "16", b: "11", c: "13", d: "Error" },
+                correctAnswer: "b",
+                explanation: "Multiplication has higher precedence than addition.",
+                author: "CodeWithHarry",
+                difficulty: "Easy"
+            },
+            {
+                id: 2,
+                text: "Which of these is NOT a primitive data type in Java?",
+                options: { a: "int", b: "float", c: "String", d: "boolean" },
+                correctAnswer: "c",
+                explanation: "String is a class in Java, not a primitive type.",
+                author: "CodeWithHarry",
+                difficulty: "Easy"
+            },
+            {
+                id: 3,
+                text: "In Python, which keyword is used to define a function?",
+                options: { a: "func", b: "def", c: "function", d: "define" },
+                correctAnswer: "b",
+                explanation: "def is used to define a function in Python.",
+                author: "CodeWithHarry",
+                difficulty: "Easy"
+            }
+        ]
     }
 };

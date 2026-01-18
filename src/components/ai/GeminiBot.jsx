@@ -81,7 +81,7 @@ const GeminiBot = () => {
                 ]
             };
 
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            const response = await fetch(`${import.meta.env.VITE_GEMINI_API_URL}?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -165,8 +165,8 @@ const GeminiBot = () => {
                                 >
                                     <div
                                         className={`max-w-[85%] p-4 rounded-2xl relative text-sm leading-relaxed ${msg.role === 'user'
-                                                ? 'bg-purple-600 text-white rounded-br-sm shadow-[0_0_15px_rgba(147,51,234,0.3)]'
-                                                : 'bg-white/10 text-gray-200 border border-white/10 rounded-bl-sm backdrop-blur-md'
+                                            ? 'bg-purple-600 text-white rounded-br-sm shadow-[0_0_15px_rgba(147,51,234,0.3)]'
+                                            : 'bg-white/10 text-gray-200 border border-white/10 rounded-bl-sm backdrop-blur-md'
                                             }`}
                                     >
                                         <p className="whitespace-pre-wrap">{msg.text}</p>

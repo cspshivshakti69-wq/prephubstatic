@@ -63754,5 +63754,107 @@ export const quizzesBySubject = {
                 }
             ]
         }
+    ],
+    "MBBS": [
+        {
+            "quizId": "mbbs-anat-1",
+            "title": "Anatomy: Upper Limb (BD Chaurasia)",
+            "subject": "Anatomy",
+            "difficulty": "Hard",
+            "duration": "60 minutes",
+            "totalQuestions": 60,
+            "questions": [
+                {
+                    "id": 1,
+                    "text": "Which nerve wraps around the surgical neck of the humerus?",
+                    "options": {
+                        "a": "Axillary nerve",
+                        "b": "Radial nerve",
+                        "c": "Ulnar nerve",
+                        "d": "Musculocutaneous nerve"
+                    },
+                    "correctAnswer": "a",
+                    "explanation": "The Axillary nerve winds around the surgical neck.",
+                    "author": "BD Chaurasia",
+                    "difficulty": "Medium"
+                }
+            ]
+        }
+    ],
+    "NEET PG": [
+        {
+            "quizId": "neet-pg-1",
+            "title": "NEET PG Mock 1: Clinical",
+            "subject": "Clinical",
+            "difficulty": "Super Hard",
+            "duration": "120 minutes",
+            "totalQuestions": 100,
+            "questions": [
+                {
+                    "id": 1,
+                    "text": "Gold standard test for diagnosis of Malaria?",
+                    "options": {
+                        "a": "Peripheral Smear",
+                        "b": "Rapid Antigen Test",
+                        "c": "QBC",
+                        "d": "PCR"
+                    },
+                    "correctAnswer": "a",
+                    "explanation": "Peripheral Smear remains the gold standard.",
+                    "author": "Harrison",
+                    "difficulty": "Hard"
+                }
+            ]
+        }
+    ],
+    "CodeWithHarry": [
+        {
+            "quizId": "cwh-c-1",
+            "title": "C Programming Basics",
+            "subject": "C Programming",
+            "difficulty": "Easy",
+            "duration": "30 minutes",
+            "totalQuestions": 20,
+            "questions": [
+                {
+                    "id": 1,
+                    "text": "What is the output of printf('%d', 5 + 3 * 2); ?",
+                    "options": {
+                        "a": "16",
+                        "b": "11",
+                        "c": "13",
+                        "d": "Error"
+                    },
+                    "correctAnswer": "b",
+                    "explanation": "Operator precedence: * is higher than +.",
+                    "author": "CodeWithHarry",
+                    "difficulty": "Easy"
+                }
+            ]
+        },
+        {
+            "quizId": "cwh-py-1",
+            "title": "Python: Arrays & Loops",
+            "subject": "Python",
+            "difficulty": "Medium",
+            "duration": "45 minutes",
+            "totalQuestions": 25,
+            "questions": [
+                {
+                    "id": 1,
+                    "text": "What is the output of print(2 ** 3 ** 2)?",
+                    "options": {
+                        "a": "64",
+                        "b": "512",
+                        "c": "8",
+                        "d": "Error"
+                    },
+                    "correctAnswer": "b",
+                    "explanation": "Exponentiation is right-associative: 3**2=9, 2**9=512.",
+                    "author": "CodeWithHarry",
+                    "difficulty": "Medium"
+                }
+            ]
+        }
     ]
 };

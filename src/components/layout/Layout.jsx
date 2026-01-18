@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import {
     LayoutDashboard, CheckSquare, BookOpen, FileText,
-    Video, Calendar, User, LogOut, Menu, X, Rocket, Upload, Search, Filter
+    Video, Calendar, User, LogOut, Menu, X, Rocket, Upload, Search, Filter, MessageCircle
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import AnimatedBackground from '../ui/AnimatedBackground';
@@ -46,6 +46,7 @@ const Layout = () => {
         { to: '/notes', icon: FileText, label: 'Magic Notes' },
         { to: '/videos', icon: Video, label: 'Video Portals' },
         { to: '/calendar', icon: Calendar, label: 'Chrono Calendar' },
+        { to: '/chats', icon: MessageCircle, label: 'Discussion Rooms' },
         { to: '/profile', icon: User, label: 'Hero Profile' },
     ];
 
@@ -59,6 +60,7 @@ const Layout = () => {
         if (path.includes('profile')) return { title: 'Hero Profile', button: 'Edit Profile' };
         if (path.includes('notes')) return { title: 'Magic Notes', button: 'New Note' };
         if (path.includes('dashboard')) return { title: 'Dashboard', button: 'Customize' };
+        if (path.includes('chats')) return { title: 'Real-Time Chat', button: 'New Group' };
         return { title: 'Prep Hub', button: 'Action' };
     };
 

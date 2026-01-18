@@ -79,6 +79,7 @@ const ManageNotes = () => {
                             >
                                 <option>JEE</option>
                                 <option>NEET</option>
+                                <option>MBBS</option>
                             </select>
                             <select
                                 className="bg-gray-50 p-3 rounded-lg border outline-none"
@@ -89,6 +90,10 @@ const ManageNotes = () => {
                                 <option>Chemistry</option>
                                 <option>Maths</option>
                                 <option>Biology</option>
+                                <option>Anatomy</option>
+                                <option>Physiology</option>
+                                <option>Pathology</option>
+                                <option>Pharmacology</option>
                             </select>
                         </div>
                         <div className="flex gap-4 items-center">
