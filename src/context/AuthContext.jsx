@@ -9,37 +9,59 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         // Check local storage for user
         const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
+        try {
+            if (storedUser) {
+                setUser(JSON.parse(storedUser));
+            }
+        } catch (error) {
+            console.error("Failed to parse user from local storage:", error);
+            localStorage.removeItem('user');
         }
         setLoading(false);
     }, []);
 
-    const login = (email, password) => {
+    const login = (email, password, remember = false) => {
         // Dummy login logic
+        let loggedUser = null;
         if (email === 'admin@examprephub.com' && password === 'admin123') {
-            const adminUser = {
+            loggedUser = {
                 name: 'Admin',
                 email: email,
                 role: 'admin',
-                avatar: 'naviya', // Use an anime avatar name reference
+                avatar: 'naviya',
             };
-            localStorage.setItem('user', JSON.stringify(adminUser));
-            setUser(adminUser);
-            return { success: true };
         } else if (password.length >= 6) {
-            // Allow any user login for demo
-            const studentUser = {
-                name: 'Demo Student',
+            loggedUser = {
+                name: 'Student',
                 email: email,
                 role: 'user',
                 avatar: 'aqua',
             };
-            localStorage.setItem('user', JSON.stringify(studentUser));
-            setUser(studentUser);
+        }
+
+        if (loggedUser) {
+            if (remember) {
+                localStorage.setItem('user', JSON.stringify(loggedUser));
+            } else {
+                sessionStorage.setItem('user', JSON.stringify(loggedUser));
+            }
+            setUser(loggedUser);
             return { success: true };
         }
         return { success: false, message: 'Invalid credentials' };
+    };
+
+    const signup = (name, email, password) => {
+        // Dummy signup logic
+        const newUser = {
+            name: name || 'Explorer',
+            email: email,
+            role: 'user',
+            avatar: 'aqua',
+        };
+        localStorage.setItem('user', JSON.stringify(newUser));
+        // We don't necessarily login immediately if the user wants an intermediate success screen
+        return { success: true, user: newUser };
     };
 
     const logout = () => {
